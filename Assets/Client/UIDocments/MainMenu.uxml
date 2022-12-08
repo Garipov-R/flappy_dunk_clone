@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Client/UIDocments/styles.uss?fileID=7433441132597879392&amp;guid=7826939742223f647959efad59193549&amp;type=3#styles" />
+    <ui:VisualElement name="MainMenu" style="height: 100%; width: 100%;">
+        <ui:Button text="Start" display-tooltip-when-elided="true" name="StartGame" class="main-menu-button" />
+        <ui:Button text="Restart" display-tooltip-when-elided="true" name="RestartGame" class="main-menu-button" style="display: none;" />
+    </ui:VisualElement>
+</ui:UXML>
