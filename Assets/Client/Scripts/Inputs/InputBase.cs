@@ -5,12 +5,12 @@ namespace Client.Inputs
 {
     public abstract class InputBase
     {
-        public enum ButtonAction { GetButton, GetButtonDown, GetButtonUp }
+        //public enum ButtonAction { GetButton, GetButtonDown, GetButtonUp }
 
-        protected PlayerInputBase m_PlayerInput;
+        protected PlayerInput m_PlayerInput;
 
 
-        public virtual void Initialize(PlayerInputBase playerInput)
+        public virtual void Initialize(PlayerInput playerInput)
         {
             m_PlayerInput = playerInput;
         }
@@ -20,5 +20,11 @@ namespace Client.Inputs
         public abstract float GetAxis(string name);
 
         public abstract float GetAxisRaw(string axisName);
+
+        public abstract bool GetAnyButton();
+
+        public abstract bool GetAnyButtonUp();
+
+        public abstract bool GetAnyButtonDown();
     }
 }

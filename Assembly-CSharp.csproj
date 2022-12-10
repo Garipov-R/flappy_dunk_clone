@@ -58,7 +58,7 @@
   <ItemGroup>
     <Compile Include="Assets\Client\Scripts\Player\PlayerControl.cs" />
     <Compile Include="Assets\Client\Scripts\Ball\Ball.cs" />
-    <Compile Include="Assets\Client\Scripts\Inputs\NewInputSystem.cs" />
+    <Compile Include="Assets\Client\Scripts\Inputs\NewInputSystemInput.cs" />
     <Compile Include="Assets\Client\Scripts\Player\PlayerInputHandler.cs" />
     <Compile Include="Assets\Client\Scripts\Utilities\MathUtility.cs" />
     <Compile Include="Assets\Client\Scripts\UIDocuments\MainMenu.cs" />
@@ -71,17 +71,20 @@
     <Compile Include="Assets\Client\Scripts\Rings\Ring.cs" />
     <Compile Include="Assets\Client\InputAction\New Controls.cs" />
     <Compile Include="Assets\Client\Scripts\Rings\RingsConfig.cs" />
-    <Compile Include="Assets\Client\Scripts\Inputs\PlayerInput.cs" />
+    <Compile Include="Assets\Client\Scripts\Inputs\UnityInput.cs" />
     <Compile Include="Assets\Client\Scripts\Game\GameLogic.cs" />
     <Compile Include="Assets\Client\Scripts\UI\ScoreTextUpdate.cs" />
+    <Compile Include="Assets\Client\Scripts\Inputs\ButtonActions.cs" />
     <Compile Include="Assets\Client\Scripts\UI\UIControl.cs" />
     <Compile Include="Assets\Client\Scripts\Inputs\InputBase.cs" />
     <Compile Include="Assets\Client\Scripts\Game\IGameLogic.cs" />
     <Compile Include="Assets\Client\Scripts\Utilities\CameraConstantWidth.cs" />
+    <Compile Include="Assets\Client\Scripts\Inputs\Input.cs" />
+    <Compile Include="Assets\Client\Scripts\Inputs\OldInputSystemInput.cs" />
     <Compile Include="Assets\Client\Scripts\UI\StartGameButton.cs" />
     <Compile Include="Assets\Client\Scripts\Player\PlayerBase.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
-    <Compile Include="Assets\Client\Scripts\Inputs\PlayerInputBase.cs" />
+    <Compile Include="Assets\Client\Scripts\Inputs\PlayerInput.cs" />
     <Compile Include="Assets\Client\Scripts\Rings\DestroyRingCollider.cs" />
     <Compile Include="Assets\Client\Scripts\UI\RestartGameButton.cs" />
     <Compile Include="Assets\Client\Scripts\Game\GameHandler.cs" />

@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Input = Client.Inputs.Input;
 
 namespace Client.UIDocuments
 {
@@ -25,6 +26,26 @@ namespace Client.UIDocuments
             _RestartButton.RegisterCallback<ClickEvent>(e => { GameLogic.RestartGame(); });
 
             GameLogic.Init(this);
+        }
+
+        private void Update()
+        {
+            if (Input.AnyKeyPressed())
+            {
+                if (GameLogic.CurrentState == GameLogic.State.RestartGame) 
+                {
+                    GameLogic.StartGame();
+
+                    return;
+                }
+                
+                if (GameLogic.CurrentState == GameLogic.State.GameEnd)
+                {
+                    GameLogic.RestartGame();
+
+                    return;
+                }
+            }
         }
 
         public void GameEnd()

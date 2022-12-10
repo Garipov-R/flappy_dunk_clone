@@ -16,7 +16,6 @@ namespace Client.Player
         [SerializeField] protected float _JumpForce = 4f;
         [SerializeField] protected float _GravityMagnitude = 6f;
         [SerializeField] protected Vector3 _Speed = new Vector3(0, 0, 2.7f);
-        [SerializeField] protected Vector3 _InputVector = new Vector3(0, 0, 1);
         [SerializeField] protected bool _IsFreezed;
         [SerializeField] protected Vector3 _GravityDirection = new Vector3(0, -1, 0); 
         [SerializeField] protected LayerMask _SolidLayerMask = ~0;
@@ -45,10 +44,10 @@ namespace Client.Player
         protected float _GravityAmount;
         protected Collider[] _Colliders;
         protected Vector3 _ExternalForce;
-        protected Vector3 _KeepInputVector;
         protected RaycastHit _RaycastHit;
         protected RaycastHit _BlankRaycastHit = new RaycastHit();
         protected bool _OnGrounded;
+        protected Vector3 _InputVector = Vector3.zero;
 
         public float GravityAmount { get => _GravityAmount; set => _GravityAmount = value; }
 
@@ -63,8 +62,6 @@ namespace Client.Player
             {
                 _Colliders[i] = colliders[i];
             }
-
-            _KeepInputVector = _InputVector;
         }
 
         protected void Update()
@@ -83,20 +80,25 @@ namespace Client.Player
             UpdateProccess();
         }
 
+        public void Move(Vector3 moveInput)
+        {
+            _InputVector = moveInput;
+        }
+
         protected virtual void UpdateProccess()
         {
             UpdatePosition();
 
             ApplyPosition();
 
-            if (CheckCollision() == true)
+            /*if (CheckCollision() == true)
             {
                 _InputVector = Vector3.zero;
             }
             else
             {
                 _InputVector = _KeepInputVector;
-            }
+            }*/
         }
 
         protected void UpdatePosition()
