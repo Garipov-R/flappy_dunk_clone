@@ -37,7 +37,7 @@ namespace Client.Rings
             if (_Entered == true)
                 return;
 
-            if (direction != _EnterDirection)
+            if (_EnterDirection != Vector3.zero && direction != _EnterDirection)
                 return;
 
             _Entered = true;

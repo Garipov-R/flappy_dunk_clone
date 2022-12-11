@@ -10,7 +10,7 @@ namespace Client.Game
     {
         public void StartGame();
 
-        public void GameEnd();
+        public void GameOver();
 
         public void Pause();
 

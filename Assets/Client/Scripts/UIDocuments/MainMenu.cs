@@ -13,6 +13,7 @@ namespace Client.UIDocuments
         private VisualElement _RootVisualElement;
         private Button _StartButton;
         private Button _RestartButton;
+        private VisualElement _StartPanel;
 
 
         private void Awake()
@@ -39,7 +40,7 @@ namespace Client.UIDocuments
                     return;
                 }
                 
-                if (GameLogic.CurrentState == GameLogic.State.GameEnd)
+                if (GameLogic.CurrentState == GameLogic.State.GameOver)
                 {
                     GameLogic.RestartGame();
 
@@ -48,7 +49,7 @@ namespace Client.UIDocuments
             }
         }
 
-        public void GameEnd()
+        public void GameOver()
         {
             _RestartButton.style.display = DisplayStyle.Flex;
         }

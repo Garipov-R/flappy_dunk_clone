@@ -8,6 +8,7 @@ namespace Client.Ball
     public class Ball : PlayerBase
     {
         private Rings.DestroyRingCollider _DestroyRing;
+        private Rings.Ring _Ring;
         private RaycastHit _RingRaycast;
 
 
@@ -30,8 +31,24 @@ namespace Client.Ball
             else if (back) direction = Vector3.back;
             direction.Normalize();
 
+            if (SingleCast(_MoveDirection.normalized, Vector3.zero, out RaycastHit hit, QueryTriggerInteraction.Ignore))
+            {
+                if (hit.transform.TryGetComponent(out Rings.Ring ring))
+                {
+                    if (_Ring != ring)
+                    {
+                        _Ring = ring;
+
+                        if (ring.IsDanger == true)
+                        {
+                            _IsAlive = false;
+                            GameLogic.GameOver();
+                        }
+                    }
+                }
+            }
+
             if (Physics.Raycast(transform.position, direction.normalized, out _RingRaycast, verticalOffset, _SolidLayerMask, QueryTriggerInteraction.Collide))
-            //if (Physics.SphereCast(transform.position, 1f, _MoveDirection.normalized, out _RingRaycast, verticalOffset, _SolidLayerMask, QueryTriggerInteraction.Collide))
             {
                 if (_DestroyRing == null)
                 {
@@ -43,13 +60,24 @@ namespace Client.Ball
 
                 if (_DestroyRing != null)
                 {
-                    if (_DestroyRing.Entered == false && _DestroyRing.EnterDirection == direction)
+                    bool enterCheck = false;
+                    if (_DestroyRing.Entered == false && _DestroyRing.EnterDirection == Vector3.zero)
+                    {
+                        enterCheck = true;
+                    }
+                    else if (_DestroyRing.Entered == false && _DestroyRing.EnterDirection == direction)
+                    {
+                        enterCheck = true;
+                    }
+
+                    if (enterCheck)
                     {
                         Score.AddScore();
                     }
                     else if (_DestroyRing.Entered == false)
                     {
-                        GameLogic.EndGame();
+                        _IsAlive = false;
+                        GameLogic.GameOver();
                     }
 
                     _DestroyRing.Enter(direction);
@@ -68,7 +96,7 @@ namespace Client.Ball
             Gizmos.DrawLine(transform.position, transform.position + -Vector3.up * 1.5f);
             Gizmos.DrawLine(transform.position, transform.position + Vector3.forward * 1.5f);
             Gizmos.DrawLine(transform.position, transform.position + -Vector3.forward * 1.5f);
-            //Gizmos.DrawWireSphere(transform.position + _MoveDirection.normalized * 1.5f, 1f);
+            Gizmos.DrawWireSphere(transform.position + _MoveDirection.normalized, 1f);
         }
     }
 }

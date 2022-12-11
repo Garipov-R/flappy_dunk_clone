@@ -9,7 +9,7 @@ namespace Client.Game
 {
     public static class GameLogic
     {
-        public enum State { StartGame, GameEnd, RestartGame }
+        public enum State { StartGame, GameOver, RestartGame }
 
         private static IGameLogic[] _IGameLogics;
 
@@ -53,19 +53,19 @@ namespace Client.Game
             }
         }
 
-        public static void EndGame()
+        public static void GameOver()
         {
             if (_IGameLogics == null || _IGameLogics.Length == 0)
                 return;
 
-            if (CurrentState == State.GameEnd)
+            if (CurrentState == State.GameOver)
                 return;
 
-            CurrentState = State.GameEnd;
+            CurrentState = State.GameOver;
 
             for (int i = 0; i < _IGameLogics.Length; i++)
             {
-                _IGameLogics[i].GameEnd();
+                _IGameLogics[i].GameOver();
             }
         }
 

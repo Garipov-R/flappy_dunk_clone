@@ -36,7 +36,7 @@ namespace Client.Game
         }
 
 
-        public void GameEnd()
+        public void GameOver()
         {
             GameStarted = false;
         }

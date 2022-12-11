@@ -26,7 +26,7 @@ namespace Client.Game
             GameLogic.Init(this);
         }
 
-        public void GameEnd()
+        public void GameOver()
         {
 
         }

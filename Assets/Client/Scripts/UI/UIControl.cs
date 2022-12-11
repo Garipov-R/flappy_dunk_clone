@@ -19,7 +19,7 @@ namespace Client.UI
             _StartGameButton.onClick.AddListener(() => { Game.GameLogic.StartGame(); });
         }
 
-        public void GameEnd()
+        public void GameOver()
         {
             _RestartGameButton.gameObject.SetActive(true);
         }

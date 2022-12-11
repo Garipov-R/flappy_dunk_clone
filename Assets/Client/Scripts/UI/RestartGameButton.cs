@@ -18,7 +18,7 @@ namespace Client.UI
             _RestarButton.onClick.AddListener(() => { Game.GameLogic.RestartGame(); _RestarButton.interactable = false; });
         }
 
-        public void GameEnd()
+        public void GameOver()
         {
             _RestarButton.interactable = true;
         }

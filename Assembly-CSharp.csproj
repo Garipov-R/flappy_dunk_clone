@@ -89,6 +89,8 @@
     <Compile Include="Assets\Client\Scripts\UI\RestartGameButton.cs" />
     <Compile Include="Assets\Client\Scripts\Game\GameHandler.cs" />
     <Compile Include="Assets\Client\Scripts\Game\SpawnObjectsManager.cs" />
+    <Compile Include="Assets\Client\Scripts\Inputs\PlayerInputBase.cs" />
+    <Compile Include="Assets\Client\Scripts\UIDocuments\UIControl.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Client\UIDocments\styles.uss" />

@@ -43,7 +43,67 @@ namespace Client.Player
 
         private void Update()
         {
-            // inputs
+            PlayerInput();
+
+            if (_Player != null)
+            {
+                if (_Player.IsAlive == true)
+                {
+                    _Player.Move(_PlayerInputVector);
+                }
+                else
+                {
+                    _Player.Move(Vector3.zero);
+                }
+            }
+
+            if (_Debug == false)
+            {
+                if (_Camera != null)
+                {
+                    Vector3 playerPositionOnScreen = _Camera.WorldToScreenPoint(_Player.transform.position);
+
+                    /*if (playerPositionOnScreen.y > Screen.height || playerPositionOnScreen.y < 0)
+                    {
+                        GameLogic.GameOver();
+                    }*/
+                    
+                    if (playerPositionOnScreen.y < -30f)
+                    {
+                        GameLogic.GameOver();
+
+                        if (playerPositionOnScreen.y < -100f)
+                        {
+                            _Player.IsFreezed = true;
+                        }
+                    }
+
+                    if (playerPositionOnScreen.y > Screen.height)
+                    {
+                        if (_Player != null)
+                        {
+                            _Player.AddForce(Vector3.down * 10);
+                        }
+                    }
+                }
+
+                if (_SpawnObjectsManager.TargetRing != null)
+                {
+                    if (_SpawnObjectsManager.TargetRing.transform.position.z + 5f < _Player.transform.position.z)
+                    {
+                        GameLogic.GameOver();
+                    }
+                }
+            }
+        }
+
+        public void PlayerInput()
+        {
+            if (_Player == null)
+                return;
+
+            if (_Player.IsAlive == false)
+                return;
 
             if (Input.Pressed("Right"))
             {
@@ -85,7 +145,7 @@ namespace Client.Player
                 {
                     vector = Vector2.zero;
                 }
-                
+
                 _InputVector = vector;
             }
 
@@ -119,7 +179,7 @@ namespace Client.Player
 
                     _Pushed = true;
                 }
-                
+
             }
 
             if (_InputVector.magnitude == 0)
@@ -149,39 +209,11 @@ namespace Client.Player
                 _Jumped = false;
                 _InputVector = Vector3.zero;
             }
-            //********
-
-
-            if (_Player != null)
-            {
-                _Player.Move(_PlayerInputVector);
-            }
-
-            if (_Debug == false)
-            {
-                if (_Camera != null)
-                {
-                    Vector3 playerPositionOnScreen = _Camera.WorldToScreenPoint(_Player.transform.position);
-
-                    if (playerPositionOnScreen.y > Screen.height || playerPositionOnScreen.y < 0)
-                    {
-                        GameLogic.EndGame();
-                    }
-                }
-
-                if (_SpawnObjectsManager.TargetRing != null)
-                {
-                    if (_SpawnObjectsManager.TargetRing.transform.position.z + 5f < _Player.transform.position.z)
-                    {
-                        GameLogic.EndGame();
-                    }
-                }
-            }
         }
 
-        public void GameEnd()
+        public void GameOver()
         {
-            _Player.IsFreezed = true;
+            //_Player.IsFreezed = true;
         }
 
         public void Pause()
@@ -192,12 +224,12 @@ namespace Client.Player
         public void RestartGame()
         {
             _Player.IsFreezed = true;
-
             _Player.transform.position = Vector3.zero;
         }
 
         public void StartGame()
         {
+            _Player.IsAlive = true;
             _Player.IsFreezed = false;
         }
     }

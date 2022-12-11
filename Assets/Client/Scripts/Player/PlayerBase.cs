@@ -13,7 +13,6 @@ namespace Client.Player
         public const float c_ColliderSpace = 0.01f;
 
         [SerializeField] protected UpdateMethod _UpdateMethod = UpdateMethod.FixedUpdate;
-        [SerializeField] protected float _JumpForce = 4f;
         [SerializeField] protected float _GravityMagnitude = 6f;
         [SerializeField] protected Vector3 _Speed = new Vector3(0, 0, 2.7f);
         [SerializeField] protected bool _IsFreezed;
@@ -21,7 +20,6 @@ namespace Client.Player
         [SerializeField] protected LayerMask _SolidLayerMask = ~0;
         [SerializeField][Range(0, 1)] private float _ExternalForceDamping = 0.01f;
 
-        public float JumpForce { get => _JumpForce; set => _JumpForce = value; }
         public bool IsFreezed 
         { 
             get => _IsFreezed;
@@ -48,8 +46,10 @@ namespace Client.Player
         protected RaycastHit _BlankRaycastHit = new RaycastHit();
         protected bool _OnGrounded;
         protected Vector3 _InputVector = Vector3.zero;
+        protected bool _IsAlive;
 
         public float GravityAmount { get => _GravityAmount; set => _GravityAmount = value; }
+        public bool IsAlive { get => _IsAlive; set => _IsAlive = value; }
 
 
         protected void Awake()
@@ -62,6 +62,8 @@ namespace Client.Player
             {
                 _Colliders[i] = colliders[i];
             }
+
+            _IsAlive = true;
         }
 
         protected void Update()
@@ -244,7 +246,13 @@ namespace Client.Player
 
         protected bool SingleCast(Vector3 direction, Vector3 offset, QueryTriggerInteraction queryTriggerInteraction)
         {
+            return SingleCast(direction, offset, out _RaycastHit, queryTriggerInteraction);
+        }
+
+        protected bool SingleCast(Vector3 direction, Vector3 offset, out RaycastHit raycastHit, QueryTriggerInteraction queryTriggerInteraction)
+        {
             var result = false;
+            raycastHit = _BlankRaycastHit;
 
             for (int i = 0; i < _Colliders.Length; i++)
             {
@@ -259,7 +267,7 @@ namespace Client.Player
                         sphereCollider.transform.TransformPoint(sphereCollider.center) + offset,
                         radius,
                         direction.normalized,
-                        out _RaycastHit,
+                        out raycastHit,
                         direction.magnitude,
                         _SolidLayerMask,
                         queryTriggerInteraction
@@ -269,7 +277,7 @@ namespace Client.Player
                 }
             }
 
-            _RaycastHit = result == false ? _BlankRaycastHit : _RaycastHit;
+            raycastHit = result == false ? _BlankRaycastHit : raycastHit;
 
             return result;
         }
