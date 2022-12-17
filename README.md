@@ -1,5 +1,11 @@
 # flappy_dunk_clone
 
+## About
+using:
+  UI Toolkit
+  VFX Shader
+  Shader graph
+
 ## Builds
 (https://github.com/Garipov-R/flappy_dunk_clone/blob/master/BULDS/flappy_dunk_3d_1.2.apk "Android apk")
 
