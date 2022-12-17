@@ -42,7 +42,9 @@ namespace Client.Inputs
 
         protected virtual bool AnyButtonDownInternal() { return false; }
 
+        public Vector2 GetVector(string name)  { return GetVectorInternal(name); }
 
+        protected virtual Vector2 GetVectorInternal(string name) { return Vector2.zero;    }
 
 
 

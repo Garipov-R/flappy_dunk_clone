@@ -66,5 +66,10 @@ namespace Client.Inputs
         {
             return UnityEngine.Input.anyKeyDown;
         }
+
+        public override Vector2 GetVector(string name)
+        {
+            return Vector2.zero;
+        }
     }
 }

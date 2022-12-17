@@ -63,12 +63,15 @@
     <Compile Include="Assets\Client\Scripts\Utilities\MathUtility.cs" />
     <Compile Include="Assets\Client\Scripts\UIDocuments\MainMenu.cs" />
     <Compile Include="Assets\Client\Scripts\Utilities\TimeUtility.cs" />
+    <Compile Include="Assets\Client\Scripts\UIDocuments\UIControl.cs" />
     <Compile Include="Assets\Client\Scripts\Game\RingManager.cs" />
     <Compile Include="Assets\Client\Scripts\Player\PlayerBase2.cs" />
     <Compile Include="Assets\Client\Scripts\Camera\CameraControl.cs" />
     <Compile Include="Assets\Client\Scripts\Game\Score.cs" />
     <Compile Include="Assets\Client\Scripts\Rings\RingsSetuper.cs" />
+    <Compile Include="Assets\Client\Scripts\Trajectory\TrajectoryRenderer.cs" />
     <Compile Include="Assets\Client\Scripts\Rings\Ring.cs" />
+    <Compile Include="Assets\Client\Scripts\Inputs\PlayerInputBase.cs" />
     <Compile Include="Assets\Client\InputAction\New Controls.cs" />
     <Compile Include="Assets\Client\Scripts\Rings\RingsConfig.cs" />
     <Compile Include="Assets\Client\Scripts\Inputs\UnityInput.cs" />
@@ -81,6 +84,7 @@
     <Compile Include="Assets\Client\Scripts\Utilities\CameraConstantWidth.cs" />
     <Compile Include="Assets\Client\Scripts\Inputs\Input.cs" />
     <Compile Include="Assets\Client\Scripts\Inputs\OldInputSystemInput.cs" />
+    <Compile Include="Assets\Client\Scripts\Test\TestTrajectory.cs" />
     <Compile Include="Assets\Client\Scripts\UI\StartGameButton.cs" />
     <Compile Include="Assets\Client\Scripts\Player\PlayerBase.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
@@ -89,11 +93,11 @@
     <Compile Include="Assets\Client\Scripts\UI\RestartGameButton.cs" />
     <Compile Include="Assets\Client\Scripts\Game\GameHandler.cs" />
     <Compile Include="Assets\Client\Scripts\Game\SpawnObjectsManager.cs" />
-    <Compile Include="Assets\Client\Scripts\Inputs\PlayerInputBase.cs" />
-    <Compile Include="Assets\Client\Scripts\UIDocuments\UIControl.cs" />
+    <Compile Include="Assets\Unity.VisualScripting.Generated\VisualScripting.Core\AotStubs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Client\UIDocments\styles.uss" />
+    <None Include="Assets\Unity.VisualScripting.Generated\VisualScripting.Core\link.xml" />
     <None Include="Assets\Client\UIDocments\MainMenu.uxml" />
   </ItemGroup>
   <ItemGroup>

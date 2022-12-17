@@ -73,6 +73,33 @@ namespace Client
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SecondaryAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""ee17f2df-c160-4ef7-a24b-6459ab7577b8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SlowDown"",
+                    ""type"": ""Button"",
+                    ""id"": ""c77c198f-ea5b-42de-a524-dca5b828df5d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Axis"",
+                    ""type"": ""Value"",
+                    ""id"": ""ffda2b0a-fe19-45c4-9baa-5eb8242cb52c"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -243,14 +270,80 @@ namespace Client
                 },
                 {
                     ""name"": """",
-                    ""id"": ""1b5d436a-25f7-45e5-8bd9-60f9a6dffdc7"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""id"": ""4b1bff91-809a-4a22-8c00-15dcdf93466c"",
+                    ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""PrimaryAttack"",
+                    ""action"": ""SecondaryAttack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4ba64c2d-c6f8-4d07-bc66-9b1de57d4489"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SlowDown"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""4e90d995-471c-4239-85eb-a94337f5d293"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Axis"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""7c510f6a-13a0-4dac-acbc-40a6d1fcfd2e"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Axis"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""38af69e0-76ed-4af3-b33d-4451da72e0b8"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Axis"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""500a3b36-1762-4c12-85d5-8e48b67c8b15"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Axis"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""93eafc61-3d38-4858-a916-ddaaa8deaddd"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Axis"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -264,6 +357,9 @@ namespace Client
             m_Character_Left = m_Character.FindAction("Left", throwIfNotFound: true);
             m_Character_Down = m_Character.FindAction("Down", throwIfNotFound: true);
             m_Character_PrimaryAttack = m_Character.FindAction("PrimaryAttack", throwIfNotFound: true);
+            m_Character_SecondaryAttack = m_Character.FindAction("SecondaryAttack", throwIfNotFound: true);
+            m_Character_SlowDown = m_Character.FindAction("SlowDown", throwIfNotFound: true);
+            m_Character_Axis = m_Character.FindAction("Axis", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -328,6 +424,9 @@ namespace Client
         private readonly InputAction m_Character_Left;
         private readonly InputAction m_Character_Down;
         private readonly InputAction m_Character_PrimaryAttack;
+        private readonly InputAction m_Character_SecondaryAttack;
+        private readonly InputAction m_Character_SlowDown;
+        private readonly InputAction m_Character_Axis;
         public struct CharacterActions
         {
             private @InputControls m_Wrapper;
@@ -337,6 +436,9 @@ namespace Client
             public InputAction @Left => m_Wrapper.m_Character_Left;
             public InputAction @Down => m_Wrapper.m_Character_Down;
             public InputAction @PrimaryAttack => m_Wrapper.m_Character_PrimaryAttack;
+            public InputAction @SecondaryAttack => m_Wrapper.m_Character_SecondaryAttack;
+            public InputAction @SlowDown => m_Wrapper.m_Character_SlowDown;
+            public InputAction @Axis => m_Wrapper.m_Character_Axis;
             public InputActionMap Get() { return m_Wrapper.m_Character; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -361,6 +463,15 @@ namespace Client
                     @PrimaryAttack.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnPrimaryAttack;
                     @PrimaryAttack.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnPrimaryAttack;
                     @PrimaryAttack.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnPrimaryAttack;
+                    @SecondaryAttack.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnSecondaryAttack;
+                    @SecondaryAttack.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnSecondaryAttack;
+                    @SecondaryAttack.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnSecondaryAttack;
+                    @SlowDown.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnSlowDown;
+                    @SlowDown.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnSlowDown;
+                    @SlowDown.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnSlowDown;
+                    @Axis.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnAxis;
+                    @Axis.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnAxis;
+                    @Axis.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnAxis;
                 }
                 m_Wrapper.m_CharacterActionsCallbackInterface = instance;
                 if (instance != null)
@@ -380,6 +491,15 @@ namespace Client
                     @PrimaryAttack.started += instance.OnPrimaryAttack;
                     @PrimaryAttack.performed += instance.OnPrimaryAttack;
                     @PrimaryAttack.canceled += instance.OnPrimaryAttack;
+                    @SecondaryAttack.started += instance.OnSecondaryAttack;
+                    @SecondaryAttack.performed += instance.OnSecondaryAttack;
+                    @SecondaryAttack.canceled += instance.OnSecondaryAttack;
+                    @SlowDown.started += instance.OnSlowDown;
+                    @SlowDown.performed += instance.OnSlowDown;
+                    @SlowDown.canceled += instance.OnSlowDown;
+                    @Axis.started += instance.OnAxis;
+                    @Axis.performed += instance.OnAxis;
+                    @Axis.canceled += instance.OnAxis;
                 }
             }
         }
@@ -391,6 +511,9 @@ namespace Client
             void OnLeft(InputAction.CallbackContext context);
             void OnDown(InputAction.CallbackContext context);
             void OnPrimaryAttack(InputAction.CallbackContext context);
+            void OnSecondaryAttack(InputAction.CallbackContext context);
+            void OnSlowDown(InputAction.CallbackContext context);
+            void OnAxis(InputAction.CallbackContext context);
         }
     }
 }

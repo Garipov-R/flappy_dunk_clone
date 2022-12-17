@@ -9,9 +9,9 @@ namespace Client.Utilities
 {
     public class MathUtility
     {
-        public float Ballistic(Transform target, Transform origin, float angleInDeegrees, float gravity)
+        public static float Ballistic(Vector3 targetPosition, Vector3 originPosition, float angleInDeegrees, float gravity)
         {
-            Vector3 fromTo = target.position - origin.position;
+            Vector3 fromTo = targetPosition - originPosition;
             Vector3 fromToXZ = new Vector3(fromTo.x, 0, fromTo.z);
 
             float x = fromToXZ.magnitude;

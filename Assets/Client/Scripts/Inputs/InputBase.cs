@@ -26,5 +26,7 @@ namespace Client.Inputs
         public abstract bool GetAnyButtonUp();
 
         public abstract bool GetAnyButtonDown();
+
+        public abstract Vector2 GetVector(string name);
     }
 }

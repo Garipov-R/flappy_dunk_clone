@@ -1,4 +1,6 @@
 ﻿
+using UnityEngine;
+
 namespace Client.Inputs
 {
     public static class Input
@@ -68,6 +70,14 @@ namespace Client.Inputs
                 return false;
 
             return PlayerInput.GetLongPress(name, duration);
+        }
+
+        public static Vector2 GetVector(string name)
+        {
+            if (PlayerInput == null)
+                return Vector2.zero;
+
+            return PlayerInput.GetVector(name);
         }
     }
 }

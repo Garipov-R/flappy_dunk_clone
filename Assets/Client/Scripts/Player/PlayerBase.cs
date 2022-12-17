@@ -19,6 +19,7 @@ namespace Client.Player
         [SerializeField] protected Vector3 _GravityDirection = new Vector3(0, -1, 0); 
         [SerializeField] protected LayerMask _SolidLayerMask = ~0;
         [SerializeField][Range(0, 1)] private float _ExternalForceDamping = 0.01f;
+        [SerializeField] protected float _TimeScale = 1f;
 
         public bool IsFreezed 
         { 
@@ -36,6 +37,10 @@ namespace Client.Player
                 _IsFreezed = value;
             } 
         }
+        public float TimeScale { get => _TimeScale; set => _TimeScale = value; }
+        public Vector3 GravityDirection { get => _GravityDirection; set => _GravityDirection = value; }
+        public float GravityMagnitude { get => _GravityMagnitude; set => _GravityMagnitude = value; }
+        public Vector3 Speed { get => _Speed; set => _Speed = value; }
 
         protected Rigidbody _Rigidbody;
         protected Vector3 _MoveDirection;
@@ -50,6 +55,8 @@ namespace Client.Player
 
         public float GravityAmount { get => _GravityAmount; set => _GravityAmount = value; }
         public bool IsAlive { get => _IsAlive; set => _IsAlive = value; }
+        public Vector3 ExternalForce { get => _ExternalForce; set => _ExternalForce = value; }
+        public Vector3 MoveDirection { get => _MoveDirection;  }
 
 
         protected void Awake()
@@ -108,11 +115,15 @@ namespace Client.Player
             if (_IsFreezed == true)
                 return;
 
-            var deltaTime = Time.timeScale * TimeUtility.FramerateDeltaTime;
+            var deltaTime = (_TimeScale * _TimeScale) * Time.timeScale * TimeUtility.FramerateDeltaTime;
             var externalForce = _ExternalForce * deltaTime;
             var accelerate = new Vector3(_InputVector.normalized.x * _Speed.x, 0, _InputVector.normalized.z * _Speed.z) * deltaTime;
             var gravity = _GravityDirection * _GravityAmount * deltaTime;
             _MoveDirection = externalForce + accelerate - gravity;
+
+            //Debug.Log(_MoveDirection);
+
+            // m_MotorThrottle /= (1 + ((m_Grounded ? m_MotorDamping : m_MotorAirborneDamping) * m_TimeScale * Time.timeScale));
 
             GravityProccess();
 
@@ -139,6 +150,9 @@ namespace Client.Player
             }
 
             _GravityAmount += (_GravityMagnitude * -0.1f) / Time.timeScale;
+            //_GravityAmount += (-_GravityMagnitude * Time.deltaTime * Time.deltaTime / 2f) / Time.timeScale;
+            //var deltaTime = _TimeScale * TimeUtility.FramerateDeltaTime;
+            //_GravityAmount += -(_GravityMagnitude * (deltaTime * deltaTime) / 2f);
         }
 
         protected bool CheckGround()
@@ -200,14 +214,26 @@ namespace Client.Player
 
         protected void UpdateExternalForce()
         {
-            var deltaTime = Time.timeScale * TimeUtility.FramerateDeltaTime;
+            var deltaTime = _TimeScale * TimeUtility.FramerateDeltaTime;
             //_ExternalForce /= (1 + (_Grounded ? _ExternalForceDamping : _ExternalForceAirDamping) * deltaTime);
+            //_ExternalForce /= (1 + (_ExternalForceDamping) * deltaTime);
             _ExternalForce /= (1 + (_ExternalForceDamping) * deltaTime);
         }
 
         public void AddForce(Vector3 force)
         {
             _ExternalForce += force;
+        }
+
+        public void SetForce(Vector3 force)
+        {
+            _ExternalForce = force;
+        }
+
+        public void AddForceRigidbody(Vector3 force)
+        {
+            _Rigidbody.constraints = RigidbodyConstraints.None;
+            _Rigidbody.AddForce(force, ForceMode.VelocityChange);
         }
 
         public void AddForceTorque(Vector3 force)

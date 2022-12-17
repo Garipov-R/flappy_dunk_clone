@@ -101,5 +101,18 @@ namespace Client.Inputs
 
             return false;
         }
+
+        protected override Vector2 GetVectorInternal(string name)
+        {
+            foreach (var input in _InputList)
+            {
+                if (input.GetVector(name).magnitude > 0)
+                {
+                    return input.GetVector(name);
+                }
+            }
+
+            return Vector2.zero;
+        }
     }
 }

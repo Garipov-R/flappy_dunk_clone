@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -19,7 +20,34 @@ namespace Client.Inputs
 
         public override float GetAxis(string name)
         {
+            try
+            {
+                InputAction inputAction = _InputControls.FindAction(name);
+
+                return inputAction.ReadValue<Vector2>().normalized.x;
+            }
+            catch (Exception)
+            {
+
+            }
+
             return 0;
+        }
+
+        public override Vector2 GetVector(string name)
+        {
+            try
+            {
+                InputAction inputAction = _InputControls.FindAction(name);
+
+                return inputAction.ReadValue<Vector2>().normalized;
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return Vector2.zero;
         }
 
         public override float GetAxisRaw(string axisName)
@@ -48,7 +76,7 @@ namespace Client.Inputs
             }
             catch (System.Exception /**/)
             {
-                Debug.LogError("Input sucks");
+                Debug.LogError($"please setup: ' {name} ' name");
             }
 
             return false;

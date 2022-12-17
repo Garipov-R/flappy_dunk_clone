@@ -3,6 +3,7 @@ using UnityEngine;
 using Client.Game;
 using UnityEngine.InputSystem;
 using Input = Client.Inputs.Input;
+using Client.Trajectory;
 
 namespace Client.Player
 {
@@ -11,13 +12,18 @@ namespace Client.Player
         [Header("Test")]
         [SerializeField] private bool _Debug;
 
+        [Header("Components")]
+        [SerializeField] private TrajectoryRenderer _TrajectoryRenderer;
+
         [Header("Player config")]
         [SerializeField] private Vector3 _JumpForceDirection = new Vector3(0, 1, 0);
         [SerializeField] private Vector3 _PushForceDirection = new Vector3(1, 0, 0);
         [SerializeField] private float _PressedJumpForce = 0.4f;
         [SerializeField] private float _JumpForce = 4f;
+        [SerializeField] private float _JumpForceTest = 4f;
         [SerializeField] private float _PushForce = 4f; 
         [SerializeField] protected Vector3 _PlayerInputVector = new Vector3(0, 0, 1);
+        [SerializeField] private float _TimeScale = .2f;
 
         [Header("Inputs")]
         [SerializeField] private Vector2 _DeltaLimit = new Vector2(0, 0);
@@ -89,7 +95,7 @@ namespace Client.Player
 
                 if (_SpawnObjectsManager.TargetRing != null)
                 {
-                    if (_SpawnObjectsManager.TargetRing.transform.position.z + 5f < _Player.transform.position.z)
+                    if (_SpawnObjectsManager.TargetRing.transform.position.z + 8f < _Player.transform.position.z)
                     {
                         GameLogic.GameOver();
                     }
@@ -100,6 +106,9 @@ namespace Client.Player
         public void PlayerInput()
         {
             if (_Player == null)
+                return;
+
+            if (_Player.IsFreezed == true)
                 return;
 
             if (_Player.IsAlive == false)
@@ -198,9 +207,9 @@ namespace Client.Player
                 _Player.GravityAmount = 0;
                 _Player.AddForce(_JumpForceDirection * _PressedJumpForce);
 
-                /*var inputDirection = _StartInputPosition - Pointer.current.position.ReadValue();
-                inputDirection *= -1;
-                _Player.AddForce(new Vector3(0, inputDirection.normalized.y, inputDirection.normalized.x) * _PressedJumpForce);*/
+                //*var inputDirection = _StartInputPosition - Pointer.current.position.ReadValue();
+                //inputDirection *= -1;
+                //_Player.AddForce(new Vector3(0, inputDirection.normalized.y, inputDirection.normalized.x) * _PressedJumpForce);*//*
             }
 
             if (Pointer.current.press.wasReleasedThisFrame == true || Input.AnyKeyReleased())
@@ -209,6 +218,63 @@ namespace Client.Player
                 _Jumped = false;
                 _InputVector = Vector3.zero;
             }
+
+
+            // TEST 
+            /*if (Input.Pressed("SecondaryAttack") || Input.Pressed("SlowDown"))
+            {
+                _StartInputPosition = Pointer.current.position.ReadValue();
+            }
+
+            if (Input.Down("SecondaryAttack") || Input.Down("SlowDown"))
+            {
+                Vector3 inputDirection = _StartInputPosition - Pointer.current.position.ReadValue();
+                Vector3 screenInputDirection = Pointer.current.position.ReadValue();
+                Vector3 worldPoint = _Camera.ScreenToWorldPoint(screenInputDirection);
+
+                //pos = new Vector3(_Player.transform.position.x, pos.y, pos.z);
+
+                var screenToCameraDistance = _Camera.nearClipPlane;
+                var mousePosNearClipPlane = new Vector3(screenInputDirection.x, screenInputDirection.y, screenToCameraDistance);
+                var worldPointPos = _Camera.ScreenToWorldPoint(mousePosNearClipPlane);
+
+                inputDirection *= -1;
+                *//*Debug.Log("input dir " + inputDirection.normalized);
+                Debug.Log(screenInputDirection);
+                Debug.Log(worldPoint);
+                Debug.Log(worldPointPos);*//*
+
+                
+
+                //Debug.DrawLine(_Player.transform.position, _Player.transform.position + -Vector3.Cross(_Camera.transform.forward, _Player.transform.up) * 10f);
+
+
+
+                *//*var force = Client.Utilities.MathUtility.Ballistic(worldPoint, _Player.transform.position, 45f, _Player.GravityMagnitude);
+                var rotation = Quaternion.LookRotation( _Player.transform.position, _Player.transform.up).eulerAngles;
+                Debug.Log(rotation);
+                Debug.DrawLine(_Player.transform.position, _Player.transform.position + rotation * 10f);*//*
+
+                _TrajectoryRenderer.ShowTrajectory(
+                    _Player.transform.position,
+                    _Player.Speed + new Vector3(0, inputDirection.normalized.y, inputDirection.normalized.x) * _JumpForceTest, 
+                    (_Player.GravityDirection * _Player.GravityMagnitude)
+                );
+                _Player.TimeScale = _TimeScale;
+            }
+            else
+            {
+                _Player.TimeScale = 1;
+            }
+
+            if (Input.Released("SecondaryAttack") || Input.Released("SlowDown"))
+            {
+                Vector3 inputDirection = _StartInputPosition - Pointer.current.position.ReadValue();
+                inputDirection *= -1;
+                _Player.GravityAmount = 0;
+                _Player.SetForce(new Vector3(0, inputDirection.normalized.y, inputDirection.normalized.x) * _JumpForce);
+                //_Player.AddForce(new Vector3(0, inputDirection.normalized.y, inputDirection.normalized.x) * _JumpForceTest);
+            }*/
         }
 
         public void GameOver()
