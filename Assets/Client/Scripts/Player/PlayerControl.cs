@@ -20,23 +20,28 @@ namespace Client.Player
         [SerializeField] private Vector3 _PushForceDirection = new Vector3(1, 0, 0);
         [SerializeField] private float _PressedJumpForce = 0.4f;
         [SerializeField] private float _JumpForce = 4f;
-        [SerializeField] private float _JumpForceTest = 4f;
+        [SerializeField] private float _JumpForceClamp = 4f;
         [SerializeField] private float _PushForce = 4f; 
         [SerializeField] protected Vector3 _PlayerInputVector = new Vector3(0, 0, 1);
-        [SerializeField] private float _TimeScale = .2f;
+        [SerializeField] private float _SlowDownTimeScale = .2f;
+        [SerializeField] private float _SlowDownSpeedLerp = 5f;
+        [SerializeField] private float _ResultForceLerp = 5f;
+        [SerializeField] private float _MaxDistanceTarget = 10;
 
         [Header("Inputs")]
-        [SerializeField] private Vector2 _DeltaLimit = new Vector2(0, 0);
         [SerializeField] private float _JumpPressDelay = 0.23f;
         [SerializeField] private float _JumpDelay = 0.5f;
+        [SerializeField] private float _InputSpeed = 3f;
 
         private PlayerBase _Player;
         private Camera _Camera;
         private SpawnObjectsManager _SpawnObjectsManager;
 
-        private Vector3 _InputVector;
+        private Vector2 _InputVector;
         private bool _Pushed;
         private bool _Jumped;
+        private Vector2 _StartInputPosition;
+        private Vector3 _ResultForce;
 
 
         private void Awake()
@@ -93,13 +98,13 @@ namespace Client.Player
                     }
                 }
 
-                if (_SpawnObjectsManager.TargetRing != null)
+                /*if (_SpawnObjectsManager.TargetRing != null)
                 {
-                    if (_SpawnObjectsManager.TargetRing.transform.position.z + 8f < _Player.transform.position.z)
+                    if (_SpawnObjectsManager.TargetRing.transform.position.z + _MaxDistanceTarget < _Player.transform.position.z)
                     {
                         GameLogic.GameOver();
                     }
-                }
+                }*/
             }
         }
 
@@ -114,6 +119,7 @@ namespace Client.Player
             if (_Player.IsAlive == false)
                 return;
 
+            /*
             if (Input.Pressed("Right"))
             {
                 _InputVector = Vector3.right;
@@ -170,7 +176,7 @@ namespace Client.Player
                 else if ((_InputVector.x < 0) && _Pushed == false)
                 {
                     _Player.GravityAmount = 0;
-                    _Player.AddForce(-_PushForceDirection * _PushForce);
+                    _Player.AddForce(new Vector3(_PushForceDirection.x, _PushForceDirection.y, -_PushForceDirection.z) * _PushForce);
 
                     _Pushed = true;
                 }
@@ -218,63 +224,62 @@ namespace Client.Player
                 _Jumped = false;
                 _InputVector = Vector3.zero;
             }
-
+            */
 
             // TEST 
-            /*if (Input.Pressed("SecondaryAttack") || Input.Pressed("SlowDown"))
+            // "SecondaryAttack"
+
+            _InputVector = Pointer.current.press.isPressed ? Pointer.current.position.ReadValue() : _InputVector + Input.GetVector("Axis").normalized * _InputSpeed;
+
+            if (Input.Pressed("PrimaryAttack") || Input.Pressed("SlowDown"))
             {
-                _StartInputPosition = Pointer.current.position.ReadValue();
+                _StartInputPosition = Pointer.current.press.isPressed ? Pointer.current.position.ReadValue() : Vector2.zero;
+                //_InputVector = Vector3.zero;
+                _ResultForce = Vector3.zero;
+
+                /*if (_SpawnObjectsManager.TargetRing != null)
+                {
+                    _InputVector = Quaternion.LookRotation(_Camera.transform.forward, Physics.gravity) * (_Player.transform.position - _SpawnObjectsManager.TargetRing.transform.position).normalized * 100;
+                }*/
             }
 
-            if (Input.Down("SecondaryAttack") || Input.Down("SlowDown"))
+            if (Input.Down("PrimaryAttack") || Input.Down("SlowDown"))
             {
-                Vector3 inputDirection = _StartInputPosition - Pointer.current.position.ReadValue();
-                Vector3 screenInputDirection = Pointer.current.position.ReadValue();
-                Vector3 worldPoint = _Camera.ScreenToWorldPoint(screenInputDirection);
-
-                //pos = new Vector3(_Player.transform.position.x, pos.y, pos.z);
-
-                var screenToCameraDistance = _Camera.nearClipPlane;
-                var mousePosNearClipPlane = new Vector3(screenInputDirection.x, screenInputDirection.y, screenToCameraDistance);
-                var worldPointPos = _Camera.ScreenToWorldPoint(mousePosNearClipPlane);
-
+                Vector3 inputDirection = _StartInputPosition - _InputVector;
                 inputDirection *= -1;
-                *//*Debug.Log("input dir " + inputDirection.normalized);
-                Debug.Log(screenInputDirection);
-                Debug.Log(worldPoint);
-                Debug.Log(worldPointPos);*//*
 
-                
+                _ResultForce = Vector3.Lerp(_ResultForce, inputDirection.normalized * inputDirection.magnitude / 5f, _ResultForceLerp);
 
-                //Debug.DrawLine(_Player.transform.position, _Player.transform.position + -Vector3.Cross(_Camera.transform.forward, _Player.transform.up) * 10f);
+                _ResultForce = Vector3.ClampMagnitude(_ResultForce, _JumpForceClamp);
 
+                _TrajectoryRenderer.gameObject.SetActive(true);
 
-
-                *//*var force = Client.Utilities.MathUtility.Ballistic(worldPoint, _Player.transform.position, 45f, _Player.GravityMagnitude);
-                var rotation = Quaternion.LookRotation( _Player.transform.position, _Player.transform.up).eulerAngles;
-                Debug.Log(rotation);
-                Debug.DrawLine(_Player.transform.position, _Player.transform.position + rotation * 10f);*//*
-
-                _TrajectoryRenderer.ShowTrajectory(
+                _TrajectoryRenderer.ShowTrajectory4(
                     _Player.transform.position,
-                    _Player.Speed + new Vector3(0, inputDirection.normalized.y, inputDirection.normalized.x) * _JumpForceTest, 
-                    (_Player.GravityDirection * _Player.GravityMagnitude)
+                    new Vector3(0, _ResultForce.y, _ResultForce.x), 
+                    (Physics.gravity),
+                    _Player.Rigidbody.drag
                 );
-                _Player.TimeScale = _TimeScale;
+
+                _Player.TimeScale = Mathf.Lerp(_Player.TimeScale, _SlowDownTimeScale, _SlowDownSpeedLerp);
+
+                Time.timeScale = Mathf.Lerp(Time.timeScale, _SlowDownTimeScale, _SlowDownSpeedLerp);
             }
             else
             {
                 _Player.TimeScale = 1;
+                Time.timeScale = 1;
             }
 
-            if (Input.Released("SecondaryAttack") || Input.Released("SlowDown"))
+            if (Input.Released("PrimaryAttack") || Input.Released("SlowDown"))
             {
-                Vector3 inputDirection = _StartInputPosition - Pointer.current.position.ReadValue();
-                inputDirection *= -1;
+                _TrajectoryRenderer.gameObject.SetActive(false);
+
                 _Player.GravityAmount = 0;
-                _Player.SetForce(new Vector3(0, inputDirection.normalized.y, inputDirection.normalized.x) * _JumpForce);
-                //_Player.AddForce(new Vector3(0, inputDirection.normalized.y, inputDirection.normalized.x) * _JumpForceTest);
-            }*/
+
+                //_Player.SetForce(new Vector3(0, inputDirection.normalized.y, inputDirection.normalized.x) * _JumpForce);
+                _Player.AddForce(new Vector3(0, _ResultForce.y, _ResultForce.x));
+            }
         }
 
         public void GameOver()

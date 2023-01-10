@@ -2,6 +2,7 @@
 using UnityEngine;
 using Client.Player;
 using Client.Game;
+using Client.EntityBehaviour;
 
 namespace Client.Ball
 {
@@ -17,21 +18,9 @@ namespace Client.Ball
             base.UpdateProccess();
 
             var verticalOffset = 1f;
-
-            bool up = Physics.Raycast(transform.position, Vector3.up, verticalOffset, _SolidLayerMask, QueryTriggerInteraction.Collide);
-            bool down = Physics.Raycast(transform.position, Vector3.down, verticalOffset, _SolidLayerMask, QueryTriggerInteraction.Collide);
-            bool forward = Physics.Raycast(transform.position, Vector3.forward, verticalOffset, _SolidLayerMask, QueryTriggerInteraction.Collide);
-            bool back = Physics.Raycast(transform.position, Vector3.back, verticalOffset, _SolidLayerMask, QueryTriggerInteraction.Collide);
-
-
             Vector3 direction = Vector3.zero;
-            if (up) direction = Vector3.up;
-            else if (down) direction = Vector3.down;
-            else if (forward) direction = Vector3.forward;
-            else if (back) direction = Vector3.back;
-            direction.Normalize();
 
-            if (SingleCast(_MoveDirection.normalized, Vector3.zero, out RaycastHit hit, QueryTriggerInteraction.Ignore))
+            if (SingleCast(_Velocity.normalized, Vector3.zero, out RaycastHit hit, QueryTriggerInteraction.Ignore))
             {
                 if (hit.transform.TryGetComponent(out Rings.Ring ring))
                 {
@@ -48,8 +37,34 @@ namespace Client.Ball
                 }
             }
 
+            direction = _Velocity;
+
             if (Physics.Raycast(transform.position, direction.normalized, out _RingRaycast, verticalOffset, _SolidLayerMask, QueryTriggerInteraction.Collide))
             {
+                if (_RingRaycast.transform.TryGetComponent(out EntityBase spawnEntityBase))
+                {
+                    if (spawnEntityBase is HealthEntity health)
+                    {
+                        Destroy(health.gameObject, .3f);
+                    }
+                    else if (spawnEntityBase is RingEntity ring)
+                    {
+                        bool enterCheck = ring.Check(direction);
+
+                        if (enterCheck)
+                        {
+                            Score.AddScore();
+                            Destroy(ring.gameObject, .3f);
+                        }
+
+                        ring.Enter(direction);
+                    }
+                }
+
+
+
+
+
                 if (_DestroyRing == null)
                 {
                     if (_RingRaycast.transform.TryGetComponent(out Rings.DestroyRingCollider destroyRing))
@@ -60,15 +75,9 @@ namespace Client.Ball
 
                 if (_DestroyRing != null)
                 {
-                    bool enterCheck = false;
-                    if (_DestroyRing.Entered == false && _DestroyRing.EnterDirection == Vector3.zero)
-                    {
-                        enterCheck = true;
-                    }
-                    else if (_DestroyRing.Entered == false && _DestroyRing.EnterDirection == direction)
-                    {
-                        enterCheck = true;
-                    }
+                    direction = (transform.position - _DestroyRing.transform.position).normalized;
+                    bool enterCheck = _DestroyRing.Check(direction);
+                    
 
                     if (enterCheck)
                     {
@@ -87,6 +96,18 @@ namespace Client.Ball
             }
         }
 
+        protected override void ApplyPosition()
+        {
+            base.ApplyPosition();
+        }
+
+        public override void AddForce(Vector3 force)
+        {
+            //base.AddForce(force);
+            _Rigidbody.velocity = Vector3.zero;
+            _Rigidbody.AddForce(force, ForceMode.VelocityChange);
+        }
+
         protected override void OnDrawGizmos()
         {
             base.OnDrawGizmos();
@@ -97,6 +118,7 @@ namespace Client.Ball
             Gizmos.DrawLine(transform.position, transform.position + Vector3.forward * 1.5f);
             Gizmos.DrawLine(transform.position, transform.position + -Vector3.forward * 1.5f);
             Gizmos.DrawWireSphere(transform.position + _MoveDirection.normalized, 1f);
+            Gizmos.DrawWireSphere(transform.position + _Velocity.normalized, 1f);
         }
     }
 }

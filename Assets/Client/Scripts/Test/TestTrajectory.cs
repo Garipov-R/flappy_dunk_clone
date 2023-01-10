@@ -16,7 +16,7 @@ namespace Client.Test
 
         public void Update()
         {
-            _TrajectoryRenderer.ShowTrajectory(transform.position, _Force, _Gravity);
+            _TrajectoryRenderer.ShowTrajectory(transform.position, _Force, _Gravity, 1);
             _TrajectoryRenderer2.ShowTrajectory3(transform.position + Vector3.right * 5f, _Force, _Player.GravityDirection, _Player.GravityMagnitude);
 
             if (Input.GetMouseButtonDown(0))

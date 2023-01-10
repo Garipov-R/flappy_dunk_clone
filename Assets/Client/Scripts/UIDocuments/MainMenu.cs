@@ -10,23 +10,17 @@ namespace Client.UIDocuments
     {
         [SerializeField] private UIDocument _MainMenuDocument;
 
-        private VisualElement _RootVisualElement;
-        private Button _StartButton;
-        private Button _RestartButton;
-        private VisualElement _StartPanel;
+        private Button _ShopButton;
+        private Button _SettingsButton;
+        private VisualElement _ShopPanel;
+        private VisualElement _SettingsPanel;
 
 
         private void Awake()
         {
-            _RootVisualElement = _MainMenuDocument.rootVisualElement;
-
-            _StartButton = _RootVisualElement.Q<Button>("StartGame");
-            _RestartButton = _RootVisualElement.Q<Button>("RestartGame");
-
-            _StartButton.RegisterCallback<ClickEvent>(e => { GameLogic.StartGame(); });
-            _RestartButton.RegisterCallback<ClickEvent>(e => { GameLogic.RestartGame(); });
-
             GameLogic.Init(this);
+
+            
         }
 
         private void Update()
@@ -51,7 +45,7 @@ namespace Client.UIDocuments
 
         public void GameOver()
         {
-            _RestartButton.style.display = DisplayStyle.Flex;
+
         }
 
         public void Pause()
@@ -61,13 +55,17 @@ namespace Client.UIDocuments
 
         public void RestartGame()
         {
-            _StartButton.style.display = DisplayStyle.Flex;
-            _RestartButton.style.display = DisplayStyle.None;
+
         }
 
         public void StartGame()
         {
-            _StartButton.style.display = DisplayStyle.None;
+
+        }
+
+        private void OpenShop()
+        {
+
         }
     }
 }

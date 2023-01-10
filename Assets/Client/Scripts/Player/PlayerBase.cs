@@ -52,11 +52,16 @@ namespace Client.Player
         protected bool _OnGrounded;
         protected Vector3 _InputVector = Vector3.zero;
         protected bool _IsAlive;
+        protected Vector3 _Velocity;
+        protected Vector3 _PrevPosition;
 
         public float GravityAmount { get => _GravityAmount; set => _GravityAmount = value; }
         public bool IsAlive { get => _IsAlive; set => _IsAlive = value; }
         public Vector3 ExternalForce { get => _ExternalForce; set => _ExternalForce = value; }
         public Vector3 MoveDirection { get => _MoveDirection;  }
+        public Rigidbody Rigidbody { get => _Rigidbody; }
+        public Vector3 Velocity { get => _Velocity; set => _Velocity = value; }
+        public Vector3 PrevPosition { get => _PrevPosition; set => _PrevPosition = value; }
 
 
         protected void Awake()
@@ -71,6 +76,8 @@ namespace Client.Player
             }
 
             _IsAlive = true;
+
+            _PrevPosition = transform.position;
         }
 
         protected void Update()
@@ -132,7 +139,11 @@ namespace Client.Player
 
         protected virtual void ApplyPosition()
         {
-            _Rigidbody.velocity = _MoveDirection;
+            //_Rigidbody.velocity = _MoveDirection;
+
+            _Velocity = _Rigidbody.velocity;
+            //_Velocity = (transform.position - _PrevPosition) / (_TimeScale * Time.deltaTime);
+            _PrevPosition = transform.position;
         }
 
         protected void GravityProccess()
@@ -220,7 +231,7 @@ namespace Client.Player
             _ExternalForce /= (1 + (_ExternalForceDamping) * deltaTime);
         }
 
-        public void AddForce(Vector3 force)
+        public virtual void AddForce(Vector3 force)
         {
             _ExternalForce += force;
         }

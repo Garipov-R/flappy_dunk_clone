@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="player-skin-item" style="width: auto; height: auto; background-color: rgb(255, 165, 165); border-top-left-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; align-items: center; justify-content: center; margin-bottom: 5px; margin-right: 5px; margin-left: 5px; margin-top: 5px; padding-left: 15px; padding-right: 15px; padding-top: 15px; padding-bottom: 15px;">
+        <ui:Label text="Label" display-tooltip-when-elided="true" name="name" style="-unity-text-align: middle-center; color: rgb(0, 0, 0); padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 10px;" />
+        <ui:VisualElement name="image" style="height: 70px; width: 70px; max-width: 130px; max-height: 130px; background-color: rgb(255, 255, 255);" />
+    </ui:VisualElement>
+</ui:UXML>

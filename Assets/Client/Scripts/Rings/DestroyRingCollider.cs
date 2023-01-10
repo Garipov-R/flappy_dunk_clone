@@ -34,11 +34,11 @@ namespace Client.Rings
 
         public void Enter(Vector3 direction)
         {
-            if (_Entered == true)
+            if (Check(direction) == false)
                 return;
 
-            if (_EnterDirection != Vector3.zero && direction != _EnterDirection)
-                return;
+            //if (_EnterDirection != Vector3.zero && direction != _EnterDirection)
+            //    return;
 
             _Entered = true;
 
@@ -46,6 +46,22 @@ namespace Client.Rings
 
             _Ring.Complete();
             //Destroy(_Parent);
+        }
+
+        public bool Check(Vector3 direction)
+        {
+            bool enterCheck = false;
+
+            if (Entered == false && EnterDirection == Vector3.zero)
+            {
+                enterCheck = true;
+            }
+            else if (Entered == false && Vector3.Dot(direction, _EnterDirection) < 0)
+            {
+                enterCheck = true;
+            }
+
+            return enterCheck;
         }
 
         private void OnDrawGizmos()

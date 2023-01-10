@@ -57,6 +57,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
+    <Compile Include="Assets\RealToon\Editor\RT_Welcome.cs" />
+    <Compile Include="Assets\RealToon\Editor\RealToonShaderGUI.cs" />
+    <Compile Include="Assets\RealToon\Editor\RealToonShaderGUI_Lite.cs" />
+    <Compile Include="Assets\RealToon\Editor\RealToonShaderGUI_URP_SRP.cs" />
+    <Compile Include="Assets\RealToon\Editor\SwapShaderToRealToon.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
