@@ -113,6 +113,7 @@
     <Compile Include="Assets\Client\Scripts\Inputs\PlayerInput.cs" />
     <Compile Include="Assets\Client\Scripts\EntityBehaviour\Spawner\SpawnEntitySettings.cs" />
     <Compile Include="Assets\Client\Scripts\Rings\DestroyRingCollider.cs" />
+    <Compile Include="Assets\Client\Scripts\Ball\Mouth.cs" />
     <Compile Include="Assets\Settings\DepthNormalsFeature.cs" />
     <Compile Include="Assets\Client\Scripts\UI\RestartGameButton.cs" />
     <Compile Include="Assets\Client\Scripts\Game\GameHandler.cs" />
@@ -856,8 +857,14 @@
     <Reference Include="Unity.ShaderGraph.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.ShaderGraph.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Cinemachine">
+      <HintPath>Library\ScriptAssemblies\Cinemachine.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Burst">
       <HintPath>Library\ScriptAssemblies\Unity.Burst.dll</HintPath>
+    </Reference>
+    <Reference Include="com.unity.cinemachine.editor">
+      <HintPath>Library\ScriptAssemblies\com.unity.cinemachine.editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.RenderPipelines.Universal.Editor.dll</HintPath>

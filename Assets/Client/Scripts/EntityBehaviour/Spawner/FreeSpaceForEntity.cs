@@ -16,5 +16,19 @@ namespace Client.EntityBehaviour.Spawner
         {
 
         }
+
+        public Vector3 GetRandomPosition()
+        {
+            Vector3 position = Vector3.zero;
+
+            position = _CenterPosition + 
+                new Vector3(
+                    Random.Range(-_Size.x, _Size.x) / 2, 
+                    Random.Range(-_Size.y, _Size.y) / 2, 
+                    Random.Range(-_Size.z, _Size.z) / 2
+                );
+
+            return position;
+        }
     }
 }

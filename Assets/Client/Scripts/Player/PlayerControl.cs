@@ -18,28 +18,19 @@ namespace Client.Player
         [Header("Player config")]
         [SerializeField] private Vector3 _JumpForceDirection = new Vector3(0, 1, 0);
         [SerializeField] private Vector3 _PushForceDirection = new Vector3(1, 0, 0);
-        [SerializeField] private float _PressedJumpForce = 0.4f;
-        [SerializeField] private float _JumpForce = 4f;
         [SerializeField] private float _JumpForceClamp = 4f;
-        [SerializeField] private float _PushForce = 4f; 
         [SerializeField] protected Vector3 _PlayerInputVector = new Vector3(0, 0, 1);
         [SerializeField] private float _SlowDownTimeScale = .2f;
         [SerializeField] private float _SlowDownSpeedLerp = 5f;
         [SerializeField] private float _ResultForceLerp = 5f;
-        [SerializeField] private float _MaxDistanceTarget = 10;
 
         [Header("Inputs")]
-        [SerializeField] private float _JumpPressDelay = 0.23f;
-        [SerializeField] private float _JumpDelay = 0.5f;
         [SerializeField] private float _InputSpeed = 3f;
 
         private PlayerBase _Player;
         private Camera _Camera;
-        private SpawnObjectsManager _SpawnObjectsManager;
 
         private Vector2 _InputVector;
-        private bool _Pushed;
-        private bool _Jumped;
         private Vector2 _StartInputPosition;
         private Vector3 _ResultForce;
 
@@ -49,7 +40,6 @@ namespace Client.Player
             GameLogic.Init(this);
             _Player = GameHandler.Instance.Player;
             _Camera = GameHandler.Instance.CameraControl.GetComponent<Camera>();
-            _SpawnObjectsManager = GameHandler.Instance.SpawnObjectsManager;
         }
 
         private void Update()

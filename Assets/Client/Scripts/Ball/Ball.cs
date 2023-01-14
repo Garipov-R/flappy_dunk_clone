@@ -8,9 +8,14 @@ namespace Client.Ball
 {
     public class Ball : PlayerBase
     {
-        private Rings.DestroyRingCollider _DestroyRing;
-        private Rings.Ring _Ring;
+        [SerializeField] private Mouth _Mouth;
+        [SerializeField] private Vector3 _OffsetLookAt;
+        [SerializeField] private float _RotateLerp = 1f;
+
         private RaycastHit _RingRaycast;
+        private RaycastHit[] _RingRaycasts;
+        private RaycastHit[] _BonusEntityRaycasts;
+        private EntityBase _HealthEntity;
 
 
         protected override void UpdateProccess()
@@ -20,25 +25,87 @@ namespace Client.Ball
             var verticalOffset = 1f;
             Vector3 direction = Vector3.zero;
 
-            if (SingleCast(_Velocity.normalized, Vector3.zero, out RaycastHit hit, QueryTriggerInteraction.Ignore))
+
+            direction = _Velocity;
+
+            if (_Mouth)
             {
-                if (hit.transform.TryGetComponent(out Rings.Ring ring))
+                _BonusEntityRaycasts = Physics.SphereCastAll(
+                    transform.position,
+                    1f,
+                    direction.normalized,
+                    _Mouth.MaxDistance,
+                    _SolidLayerMask,
+                    QueryTriggerInteraction.Collide
+                );
+
+                foreach (var cast in _BonusEntityRaycasts)
                 {
-                    if (_Ring != ring)
+                    if (cast.transform.TryGetComponent(out EntityBase spawnEntityBase))
                     {
-                        _Ring = ring;
+                        if (spawnEntityBase is HealthEntity health)
+                        {
+                            _Mouth.SetMouth(health.transform.position);
+
+                            _HealthEntity = health;
+
+                            break;
+                        }
+                    }
+                }
+
+                if (_HealthEntity == null)
+                {
+                    _Mouth.CloseMouth();
+                }
+                else
+                {
+                    _Mouth.SetMouth(_HealthEntity.transform.position);
+                }
+            }
+
+
+            _RingRaycasts = Physics.RaycastAll(
+                transform.position,
+                direction.normalized, 
+                verticalOffset, 
+                _SolidLayerMask, 
+                QueryTriggerInteraction.Collide
+            );
+
+            foreach (var hitItem in _RingRaycasts)
+            {
+                if (hitItem.transform.TryGetComponent(out EntityBase spawnEntityBase))
+                {
+                    if (spawnEntityBase is HealthEntity health)
+                    {
+                        Destroy(health.gameObject);
+                    }
+                    else if (spawnEntityBase is RingEntity ring)
+                    {
+                        bool enterCheck = ring.Check(direction);
 
                         if (ring.IsDanger == true)
                         {
                             _IsAlive = false;
                             GameLogic.GameOver();
                         }
+                        else if (enterCheck)
+                        {
+                            Score.AddScore();
+                            Destroy(ring.gameObject, .3f);
+                        }
+
+                        ring.Enter(direction);
                     }
                 }
             }
 
-            direction = _Velocity;
+            //transform.LookAt(transform.position + direction.normalized * 10f);
+            //transform.rotation = Quaternion.LookRotation(direction.normalized + _OffsetLookAt);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(direction.normalized + _OffsetLookAt), _RotateLerp);
 
+            /*
             if (Physics.Raycast(transform.position, direction.normalized, out _RingRaycast, verticalOffset, _SolidLayerMask, QueryTriggerInteraction.Collide))
             {
                 if (_RingRaycast.transform.TryGetComponent(out EntityBase spawnEntityBase))
@@ -77,7 +144,7 @@ namespace Client.Ball
                 {
                     direction = (transform.position - _DestroyRing.transform.position).normalized;
                     bool enterCheck = _DestroyRing.Check(direction);
-                    
+
 
                     if (enterCheck)
                     {
@@ -94,6 +161,7 @@ namespace Client.Ball
                     _DestroyRing = null;
                 }
             }
+            */
         }
 
         protected override void ApplyPosition()
@@ -117,7 +185,7 @@ namespace Client.Ball
             Gizmos.DrawLine(transform.position, transform.position + -Vector3.up * 1.5f);
             Gizmos.DrawLine(transform.position, transform.position + Vector3.forward * 1.5f);
             Gizmos.DrawLine(transform.position, transform.position + -Vector3.forward * 1.5f);
-            Gizmos.DrawWireSphere(transform.position + _MoveDirection.normalized, 1f);
+            //Gizmos.DrawWireSphere(transform.position + _MoveDirection.normalized, 1f);
             Gizmos.DrawWireSphere(transform.position + _Velocity.normalized, 1f);
         }
     }

@@ -44,13 +44,12 @@ namespace Client.Trajectory
 
             float timeStep = Time.fixedDeltaTime / Physics.defaultSolverVelocityIterations;
             Vector3 gravityaccel = gravity * timeStep * timeStep;
-
             drag = 1f - timeStep * drag;
             Vector3 moveStep = force * timeStep;
 
             for (int i = 0; i < _Iteration; i++)
             {
-                moveStep = (moveStep + (gravity * timeStep * timeStep)) * (1f - timeStep * drag);
+                moveStep = (moveStep + gravityaccel) * drag;
 
                 //moveStep += gravityaccel;
                 //moveStep *= drag;

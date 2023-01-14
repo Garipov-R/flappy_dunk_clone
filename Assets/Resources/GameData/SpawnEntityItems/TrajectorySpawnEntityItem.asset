@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TrajectorySpawnEntityItem
   m_EditorClassIdentifier: 
   _RingEntityConfig:
-    _EntityPrefab: {fileID: 2467148045874857833, guid: 74a91f49ac3e01b40b373926ee39f374,
+    _EntityPrefab: {fileID: -6364905621179796749, guid: 707b41e57e6a3dd4c8cb762a413a2dd5,
       type: 3}
     _MaxVerticalSpawn: 10
     _MinVerticalSpawn: -10
@@ -22,7 +22,7 @@ MonoBehaviour:
   _RingsGradient:
     serializedVersion: 2
     key0: {r: 1, g: 0, b: 0.90488815, a: 1}
-    key1: {r: 0, g: 0.84453964, b: 1, a: 1}
+    key1: {r: 1, g: 0.807896, b: 0, a: 1}
     key2: {r: 0, g: 0, b: 0, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
@@ -48,7 +48,7 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
-  _UpForceRange: {x: 50, y: 50}
-  _ForwardForceRange: {x: 30, y: 30}
-  _AmountRange: {x: 10, y: 10}
-  _Step: 10
+  _UpForceRange: {x: 30, y: 15}
+  _ForwardForceRange: {x: 30, y: 15}
+  _AmountRange: {x: 10, y: 7}
+  _Step: 6

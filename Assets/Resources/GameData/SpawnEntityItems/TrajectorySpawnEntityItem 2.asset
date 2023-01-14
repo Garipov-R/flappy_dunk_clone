@@ -49,6 +49,6 @@ MonoBehaviour:
     m_NumColorKeys: 3
     m_NumAlphaKeys: 2
   _UpForceRange: {x: 0, y: 0}
-  _ForwardForceRange: {x: 50, y: 50}
-  _AmountRange: {x: 30, y: 30}
+  _ForwardForceRange: {x: 25, y: 30}
+  _AmountRange: {x: 10, y: 20}
   _Step: 1

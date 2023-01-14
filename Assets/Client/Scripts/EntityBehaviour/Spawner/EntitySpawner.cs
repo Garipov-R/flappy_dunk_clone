@@ -13,10 +13,13 @@ namespace Client.EntityBehaviour.Spawner
         [SerializeField] private int _SpawnAmount = 10;
         [SerializeField] private Transform _StartSpawnTransform;
         [SerializeField] private List<SpawnEntitySettings> _SpawnEntitySettings = new List<SpawnEntitySettings>();
+        [SerializeField] private List<EntityBase> _HealthEntities = new();
+        [SerializeField] private float _PlayerDistance = 10f;
 
         private List<EntityChunck> _EntityChuncks = new List<EntityChunck>();
         private Vector3 _LastSpawnedPosition;
         private List<FreeSpaceForEntity> _FreeSpaceForEntities = new List<FreeSpaceForEntity>();
+        private List<EntityBase> _HealthSpawnEntities = new();
 
         public PlayerBase Player { get => _Player; set => _Player = value; }
 
@@ -35,12 +38,45 @@ namespace Client.EntityBehaviour.Spawner
         {
             _LastSpawnedPosition = _StartSpawnTransform.position;
             SpawnRings();
+            //SpawnHealth();
+            SpawnTest();
+            CheckPlayerDistance();
+        }
 
-            _FreeSpaceForEntities = FreeSpaceGenerator.Generate(_EntityChuncks);
+        private void CheckPlayerDistance()
+        {
+            _EntityChuncks.ForEach(entityChunck => 
+            {
+                var entity = entityChunck.Entities[entityChunck.Entities.Count - 1];
+                entity.OnDestroyed += () =>
+                {
+                    if (Vector3.Distance(_LastSpawnedPosition, _Player.transform.position) < _PlayerDistance)
+                    {
+                        SpawnRings();
+                        SpawnTest();
+                        CheckPlayerDistance();
+                    }
+                };
+            });
+        }
+
+        private void SpawnTest()
+        {
+            foreach (var freeSpace in _FreeSpaceForEntities)
+            {
+                var healthEntity = Instantiate(
+                        _HealthEntities[Random.Range(0, _HealthEntities.Count)],
+                        freeSpace.GetRandomPosition(),
+                        Quaternion.identity
+                    );
+
+                _HealthSpawnEntities.Add(healthEntity);
+            }
         }
 
         private void SpawnRings()
         {
+            List<EntityChunck> newEntityChuncks = new();
             for (int i = 0; i < _SpawnAmount; i++)
             {
                 var chunck = EntityBuilder.Build(
@@ -50,14 +86,32 @@ namespace Client.EntityBehaviour.Spawner
                     _StartSpawnTransform.up
                 );
 
+                newEntityChuncks.Add(chunck);
                 _EntityChuncks.Add(chunck);
 
-                _LastSpawnedPosition = new Vector3(0, 0, chunck.Entities[chunck.Entities.Count - 1].transform.position.z);
+                _LastSpawnedPosition = new Vector3(_LastSpawnedPosition.x, _LastSpawnedPosition.y, chunck.Entities[chunck.Entities.Count - 1].transform.position.z);
             }
+
+            _FreeSpaceForEntities = FreeSpaceGenerator.Generate(newEntityChuncks);
         }
 
         public void SpawnHealth()
         {
+            foreach (var entityChunck in _EntityChuncks)
+            {
+                float spawnChance = Random.Range(0, 100);
+                if (spawnChance > 30)
+                {
+                    var healthEntity = Instantiate(
+                        _HealthEntities[Random.Range(0, _HealthEntities.Count)],
+                        entityChunck.Entities[entityChunck.Entities.Count - 1].transform.position + entityChunck.Entities[entityChunck.Entities.Count - 1].transform.forward * 5f,
+                        Quaternion.identity
+                    );
+
+                    _HealthSpawnEntities.Add(healthEntity);
+                }
+            }
+
             /*foreach (var spawnSetting in _SpawnSettings)
             {
                 foreach (var entityProperty in spawnSetting.SpawnEntityItem.EntityProperties)
@@ -81,6 +135,9 @@ namespace Client.EntityBehaviour.Spawner
         {
             _EntityChuncks.ForEach(entity => { entity.Clear(); });
             _EntityChuncks.Clear();
+
+            _HealthSpawnEntities.ForEach(entity => { if (entity) Destroy(entity.gameObject); });
+            _HealthSpawnEntities.Clear();
         }
 
         public SpawnEntitySO GetSpawnEntitySO()
